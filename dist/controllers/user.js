@@ -14,7 +14,17 @@ const { sign } = jsonwebtoken_1.default;
 */
 const getUsers = (req, res, next) => {
     try {
-        res.status(200).json(fetchDatabase_1.default.getUsers());
+        const users = fetchDatabase_1.default.getUsers();
+        const visibleUsers = users.map(({ userId, name, lastName, email, image }) => {
+            return {
+                userId,
+                name,
+                lastName,
+                email,
+                image
+            };
+        });
+        res.status(200).json(visibleUsers);
     }
     catch (error) {
         const statusError = new models_1.StatusError('Error while fetching data', 500);

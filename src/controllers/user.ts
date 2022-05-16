@@ -19,7 +19,19 @@ export const getUsers: ControllerFunction = (
 	next: NextFunction
 ): void => {
 	try {
-		res.status(200).json(database.getUsers());
+		const users = database.getUsers();
+		const visibleUsers = users.map(
+			({ userId, name, lastName, email, image }) => {
+				return {
+					userId,
+					name,
+					lastName,
+					email,
+					image
+				};
+			}
+		);
+		res.status(200).json(visibleUsers);
 	} catch (error) {
 		const statusError = new StatusError('Error while fetching data', 500);
 		next(statusError);
@@ -75,7 +87,7 @@ export const createUser: ControllerFunction = (
 	const { name, lastName, email, password } = req.body;
 	const image = req.file?.path;
 	if (!image) {
-		res.status(400).json({ message: 'Missing image file' });
+		res.status(422).json({ message: 'Missing image file' });
 		return;
 	}
 	// could be done with express-validator
@@ -122,7 +134,7 @@ export const logInUser: ControllerFunction = (
 					{ expiresIn: '1h' }
 				);
 				res
-					.status(200)
+					.status(201)
 					.json({ message: 'Logged In successfully', userId, token });
 				return;
 			}
