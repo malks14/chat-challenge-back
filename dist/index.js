@@ -31,6 +31,7 @@ const multer_1 = __importStar(require("multer"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const uniqid_1 = __importDefault(require("uniqid"));
+const cors_1 = __importDefault(require("cors"));
 const user_1 = __importDefault(require("./routes/user"));
 const chat_1 = __importDefault(require("./routes/chat"));
 const notFound_1 = __importDefault(require("./routes/notFound"));
@@ -39,6 +40,7 @@ const express_graphql_1 = require("express-graphql");
 const schema_1 = __importDefault(require("./graphql/schema"));
 const resolvers_1 = __importDefault(require("./graphql/resolvers"));
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
 const fileStorage = (0, multer_1.diskStorage)({
     destination: (req, file, callback) => {
         callback(null, 'dist/images');
@@ -54,12 +56,6 @@ const fileFilter = (req, file, callback) => {
 app.use(body_parser_1.default.json());
 app.use((0, multer_1.default)({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use('/images', express_1.default.static(path_1.default.join(__dirname, 'images')));
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
 app.use(user_1.default);
 app.use(chat_1.default);
 app.use('/graphql', (0, express_graphql_1.graphqlHTTP)({

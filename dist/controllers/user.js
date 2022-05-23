@@ -72,7 +72,7 @@ const createUser = (req, res, next) => {
     const { name, lastName, email, password } = req.body;
     const image = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
     if (!image) {
-        res.status(400).json({ message: 'Missing image file' });
+        res.status(422).json({ message: 'Missing image file' });
         return;
     }
     // could be done with express-validator
@@ -113,7 +113,7 @@ const logInUser = (req, res, next) => {
                     userId
                 }, 'toremsoftware', { expiresIn: '1h' });
                 res
-                    .status(200)
+                    .status(201)
                     .json({ message: 'Logged In successfully', userId, token });
                 return;
             }

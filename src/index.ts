@@ -3,6 +3,7 @@ import multer, { diskStorage } from 'multer';
 import bodyParser from 'body-parser';
 import path from 'path';
 import uniqid from 'uniqid';
+import cors from 'cors';
 
 import userRoutes from './routes/user';
 import chatRoutes from './routes/chat';
@@ -13,9 +14,10 @@ import { StatusError } from './models';
 import { graphqlHTTP } from 'express-graphql';
 import graphqlSchema from './graphql/schema';
 import graphqlResolver from './graphql/resolvers';
-import { GraphQLFormattedError } from 'graphql';
 
 const app = express();
+
+app.use(cors());
 
 const fileStorage = diskStorage({
 	destination: (req, file, callback) => {
@@ -38,13 +40,6 @@ app.use(
 );
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
-
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', '*');
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-	next();
-});
 
 app.use(userRoutes);
 app.use(chatRoutes);
