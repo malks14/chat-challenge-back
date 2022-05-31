@@ -315,7 +315,7 @@ on 'chats'
 
 ## GraphQL
 
-Hay una única consulta para realizar en GraphQL, y es la de **filtrar los mensajes de un usuario**. No es necesario contar con gran conocimiento para esta parte pero sí saber hacer consultas y haber trabajado alguna vez con esta tecnología.
+Hay una única consulta para realizar en GraphQL, y es la de **filtrar los mensajes dentro de un chat de un usuario**. No es necesario contar con gran conocimiento para esta parte pero sí saber hacer consultas y haber trabajado alguna vez con esta tecnología.
 
 ```graphql
 # la función filterMessages es la siguiente:
@@ -324,4 +324,4 @@ filterMessages(userId: ID!, chatId: ID!, filter: String!): [Message]!
 
 ```
 
-El atributo *filter* es el texto a filtrar, y retorna la lista de mensajes que contienen ese texto. 
+El atributo *filter* es el texto a filtrar, y retorna la lista de mensajes dentro del chat que contienen ese texto. 
