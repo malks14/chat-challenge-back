@@ -4,11 +4,17 @@ import { UserInterface } from '../types/User.types';
 
 export class User implements UserInterface {
 	userId: string;
+
 	name: string;
+
 	lastName: string;
+
 	email: string;
+
 	password: string;
+
 	image: string;
+
 	chats: ChatInterface[];
 
 	constructor(

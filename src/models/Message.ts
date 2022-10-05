@@ -3,8 +3,11 @@ import { MessageInterface } from '../types/Message.types';
 
 export class Message implements MessageInterface {
 	messageId: string;
+
 	message: string;
+
 	timeDate: string;
+
 	received: boolean;
 
 	constructor(message: string, received: boolean) {

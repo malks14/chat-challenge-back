@@ -1,4 +1,4 @@
-# API REST para front-end development
+# TOREM API REST TESTING
 
 <div style="text-align: justify">
 
@@ -61,44 +61,35 @@ La API cuenta con endpoints para generar las acciones en el servidor. Las accion
 
 #### 1. Acciones de usuario
 
-##### Obtener usuarios
+##### Obtener el usuario loggeado
 
-##### GET /user
-
-Retorna una lista con toda la información pública de los usuarios registrados, junto con su userId. La información pública de un usuario es su _nombre, apellido, email e imagen_.
-
-| Caso  | Status |                  Respuesta                   |
-| :---: | :----: | :------------------------------------------: |
-| Exito |  200   | [ { userId, name, lastName, email, image } ] |
-| Fallo |  500   |   { message: 'Error while fetching data' }   |
-
-##### Obtener un usuario
-
-##### GET /user/:userId
+##### GET /users
 
 Retorna toda la información del usuario con ID pasada por parámetro.
 
-|   Caso    | Status |                Respuesta                 |
-| :-------: | :----: | :--------------------------------------: |
-|   Exito   |  200   |                 { user }                 |
-| Not Found |  404   |      { message: 'User not found' }       |
-|   Fallo   |  500   | { message: 'Error while fetching data' } |
+|      Caso      | Status |                Respuesta                 |
+| :------------: | :----: | :--------------------------------------: |
+|     Exito      |  200   |                 { user }                 |
+|   Not Found    |  404   |      { message: 'User not found' }       |
+|     Fallo      |  500   | { message: 'Error while fetching data' } |
+| No autoritzado |  401   |    { message: 'Unauthorized action' }    |
 
-##### Eliminar un usuario
+##### Eliminar el usuario loggeado
 
-##### DELETE /user/:userId
+##### DELETE /users
 
 Elimina al usuario con ID pasada por parámetro. Requiere pasarle un **Auth token** como encabezado de autenticación a la consulta. Ese token es otorgado en la respuesta en formato JSON a la hora de iniciar sesión (detallado más adelante).
 
-|     Caso     | Status |                Respuesta                 |
-| :----------: | :----: | :--------------------------------------: |
-|    Exito     |  201   | { message: 'User deleted successfully' } |
-| No hay Token |  401   |    { message: 'Unauthorized action' }    |
-|    Fallo     |  500   | { message: 'Error while fetching data' } |
+|      Caso      | Status |                Respuesta                 |
+| :------------: | :----: | :--------------------------------------: |
+|     Exito      |  201   | { message: 'User deleted successfully' } |
+|  No hay Token  |  401   |    { message: 'Unauthorized action' }    |
+|     Fallo      |  500   | { message: 'Error while fetching data' } |
+| No autoritzado |  401   |    { message: 'Unauthorized action' }    |
 
 ##### Crear un usuario
 
-##### POST /user/create
+##### POST /signup
 
 En el body de la request:
 
@@ -124,7 +115,7 @@ Si los datos del cuerpo de la request están correctos, se creará el usuario en
 
 ##### Iniciar sesión
 
-##### POST /user/login
+##### POST /login
 
 En el body de la request:
 
@@ -146,20 +137,20 @@ Si el email y la contraseña corresponden a un usuario existente, la consulta de
 
 #### 2. Acciones de chats
 
-##### Obtener todos los chats de un usuario
+##### Obtener todos los chats del usuario loggeado
 
-##### GET /chat/:userId
+##### GET /chats
 
 Retorna toda la información de los chats del usuario con todos sus respectivos mensajes. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
-|            Caso            | Status |             Respuesta              |
-| :------------------------: | :----: | :--------------------------------: |
-|           Exito            |  200   |      { chats: [ { chat } ] }       |
-| Token o userId incorrectos |  401   | { message: 'Unauthorized action' } |
+|      Caso      | Status |             Respuesta              |
+| :------------: | :----: | :--------------------------------: |
+|     Exito      |  200   |      { chats: [ { chat } ] }       |
+| No autoritzado |  401   | { message: 'Unauthorized action' } |
 
-##### Crear un chat para un usuario
+##### Crear un chat para el usuario loggeado
 
-##### POST /chat/:userId
+##### POST /chats
 
 En el body de la request:
 
@@ -172,16 +163,15 @@ En el body de la request:
 
 Crea un nuevo chat con una persna con el nombre y foto de perfil dados en el cuerpo de la request. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
-|                 Caso                  | Status |                          Respuesta                           |
-| :-----------------------------------: | :----: | :----------------------------------------------------------: |
-|                 Exito                 |  201   |           { message: 'Chat created successfully' }           |
-|      Token o userId incorrectos       |  401   |              { message: 'Unauthorized action' }              |
-| Nombre o imagen en formato incorrecto |  400   | { message: 'Must provide a valid recipient name and image' } |
-|                 Fallo                 |  500   |           { message: 'Error while fetching data' }           |
+|      Caso      | Status |                Respuesta                 |
+| :------------: | :----: | :--------------------------------------: |
+|     Exito      |  201   | { message: 'Chat created successfully' } |
+|     Fallo      |  500   | { message: 'Error while fetching data' } |
+| No autoritzado |  401   |    { message: 'Unauthorized action' }    |
 
-##### Enviar nuevo mensaje a un chat
+##### Enviar nuevo mensaje a un chat del usuario loggeado
 
-##### POST /chat/:userId/:chatId
+##### POST /chats/:chatId
 
 En el body de la request:
 
@@ -193,25 +183,25 @@ En el body de la request:
 
 Envía un nuevo mensaje desde el usuario con _userId_ al chat con _chatId_ ingresados por parámetro y con el texto dado en el cuerpo de la request. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
-|            Caso            | Status |                Respuesta                 |
-| :------------------------: | :----: | :--------------------------------------: |
-|           Exito            |  201   | { message: 'Message sent successfully' } |
-| Token o userId incorrectos |  401   |    { message: 'Unauthorized action' }    |
-| userId o chatId no validos |  404   | { message: 'Could not find user chat' }  |
-|           Fallo            |  500   | { message: 'Error while fetching data' } |
+|      Caso      | Status |                Respuesta                 |
+| :------------: | :----: | :--------------------------------------: |
+|     Exito      |  201   | { message: 'Message sent successfully' } |
+| chat no existe |  404   | { message: 'Could not find user chat' }  |
+|     Fallo      |  500   | { message: 'Error while fetching data' } |
+| No autoritzado |  401   |    { message: 'Unauthorized action' }    |
 
-##### Eliminar un chat
+##### Eliminar un chat del usuario loggeado
 
-##### DELETE /chat/:userId/:chatId
+##### DELETE /chats/:chatId
 
 Elimina el chat con _chatId_ del usuario con _userId_ ingresados por parámetro. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
-|            Caso            | Status |                    Respuesta                     |
-| :------------------------: | :----: | :----------------------------------------------: |
-|           Exito            |  201   | { message: 'Chat history deleted successfully' } |
-| Token o userId incorrectos |  401   |        { message: 'Unauthorized action' }        |
-| userId o chatId no validos |  404   |     { message: 'Could not find user chat' }      |
-|           Fallo            |  500   |     { message: 'Error while fetching data' }     |
+|      Caso      | Status |                    Respuesta                     |
+| :------------: | :----: | :----------------------------------------------: |
+|     Exito      |  201   | { message: 'Chat history deleted successfully' } |
+| chat no existe |  404   |     { message: 'Could not find user chat' }      |
+|     Fallo      |  500   |     { message: 'Error while fetching data' }     |
+| No autoritzado |  401   |        { message: 'Unauthorized action' }        |
 
 <hr/>
 
@@ -301,7 +291,7 @@ on 'chats'
     chatId: chatId
 }
 
-// SI HUBO UN FALLO Y EL MENSAJE NO SE PUDO ENVIAR: (NO DEBERÍA SUCEDER)
+// SI HUBO UN FALLO Y EL MENSAJE NO SE PUDO ENVIAR: (EXISTE UNA PROBABILIDAD DE QUE SUCEDA)
 
 on 'chats'
 {
@@ -312,16 +302,3 @@ on 'chats'
 ```
 
 <hr />
-
-## GraphQL
-
-Hay una única consulta para realizar en GraphQL, y es la de **filtrar los mensajes dentro de un chat de un usuario**. No es necesario contar con gran conocimiento para esta parte pero sí saber hacer consultas y haber trabajado alguna vez con esta tecnología.
-
-```graphql
-# la función filterMessages es la siguiente:
-
-filterMessages(userId: ID!, chatId: ID!, filter: String!): [Message]!
-
-```
-
-El atributo *filter* es el texto a filtrar, y retorna la lista de mensajes dentro del chat que contienen ese texto. 
