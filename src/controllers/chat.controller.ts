@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import database from '../database/fetchDatabase';
-import { Chat, Message, StatusError } from '../models';
+
+import database from '../database/fetch';
+import { StatusError } from '../types/StatusError';
+import { Chat, Message } from '../models';
 import { getIO } from '../socket';
 
 interface ControllerFunction {
@@ -134,9 +136,7 @@ export const deleteChat: ControllerFunction = (
 	}
 };
 
-import { id } from '../models';
-
-const sendReplyMessage = (userId: id, chatId: id): void => {
+const sendReplyMessage = (userId: string, chatId: string): void => {
 	try {
 		const chat = database.getUserChat(userId, chatId);
 		if (chat) {

@@ -5,8 +5,8 @@ import {
 	deleteUser,
 	createUser,
 	logInUser
-} from '../controllers/user';
-import { isAuth } from '../controllers/auth';
+} from '../controllers/user.controller';
+import { isAuth } from '../controllers/auth.controller';
 
 const router = Router();
 

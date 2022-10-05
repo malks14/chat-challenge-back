@@ -4,8 +4,8 @@ import {
 	createChat,
 	sendMessage,
 	deleteChat
-} from '../controllers/chat';
-import { isAuth } from '../controllers/auth';
+} from '../controllers/chat.controller';
+import { isAuth } from '../controllers/auth.controller';
 
 const router = Router();
 

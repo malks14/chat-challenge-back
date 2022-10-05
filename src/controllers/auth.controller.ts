@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { StatusError } from '../models';
 import jwt from 'jsonwebtoken';
+
+import { StatusError } from '../types/StatusError';
+
 const { verify } = jwt;
 
 interface ControllerFunction {

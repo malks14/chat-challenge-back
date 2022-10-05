@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import database from '../database/fetchDatabase';
-import { User, StatusError } from '../models';
 import jwt from 'jsonwebtoken';
+
+import database from '../database/fetch';
+import { User } from '../models/User';
 import { getIO } from '../socket';
+import { StatusError } from '../types/StatusError';
 
 const { sign } = jwt;
 

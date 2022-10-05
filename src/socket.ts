@@ -1,4 +1,11 @@
 import { Server } from 'socket.io';
+import {
+	ClientToServerEvents,
+	InterServerEvents,
+	ServerToClientEvents,
+	ServerType,
+	SocketData
+} from './types/Socket.types';
 
 let io: ServerType;
 

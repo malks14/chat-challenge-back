@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { User, Chat, Message, id } from '../models';
+import { User, Chat, Message } from '../models';
+import { ChatInterface } from '../types/Chat.types';
 
 type DB = User[];
 
@@ -24,12 +25,12 @@ export default class Database {
 		return users.find((user) => user.email === email);
 	}
 
-	static getUser(userId: id): User | undefined {
+	static getUser(userId: string): User | undefined {
 		const users: DB = getDatabase();
 		return users.find((user) => user.userId === userId);
 	}
 
-	static deleteUser(userId: id): void {
+	static deleteUser(userId: string): void {
 		let users: DB = getDatabase();
 		users = users.filter((user) => user.userId !== userId);
 		writeDatabase(users);
@@ -54,19 +55,21 @@ export default class Database {
 	/*
         CHATS
     */
-	static getUserChats(userId: id): Chat[] | undefined {
+	static getUserChats(userId: string): Chat[] | undefined {
 		const users = getDatabase();
 		const requestedUser = users.find((user) => user.userId === userId);
 		return requestedUser?.chats;
 	}
 
-	static getUserChat(userId: id, chatId: id): Chat | undefined {
+	static getUserChat(userId: string, chatId: string): Chat | undefined {
 		const users = getDatabase();
 		const requestedUser = users.find((user) => user.userId === userId);
-		return requestedUser?.chats.find((chat) => chat.chatId === chatId);
+		return requestedUser?.chats.find(
+			(chat: ChatInterface) => chat.chatId === chatId
+		);
 	}
 
-	static createChat(userId: id, chat: Chat): void {
+	static createChat(userId: string, chat: Chat): void {
 		const users = getDatabase();
 		users.map((user) => {
 			if (user.userId === userId) {
@@ -77,22 +80,24 @@ export default class Database {
 		writeDatabase(users);
 	}
 
-	static deleteChat(userId: id, chatId: id): void {
+	static deleteChat(userId: string, chatId: string): void {
 		let users: DB = getDatabase();
 		users = users.map((user) => {
 			if (user.userId === userId) {
-				user.chats = user.chats.filter((chat) => chat.chatId !== chatId);
+				user.chats = user.chats.filter(
+					(chat: ChatInterface) => chat.chatId !== chatId
+				);
 			}
 			return user;
 		});
 		writeDatabase(users);
 	}
 
-	static sendMessage(userId: id, chatId: id, message: Message): void {
+	static sendMessage(userId: string, chatId: string, message: Message): void {
 		let users: DB = getDatabase();
 		users.map((user) => {
 			if (user.userId === userId) {
-				user.chats = user.chats.map((chat) => {
+				user.chats = user.chats.map((chat: ChatInterface) => {
 					if (chat.chatId === chatId) {
 						chat.messages.push(message);
 					}

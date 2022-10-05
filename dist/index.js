@@ -32,13 +32,10 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const uniqid_1 = __importDefault(require("uniqid"));
 const cors_1 = __importDefault(require("cors"));
+const socket_1 = require("./socket");
 const user_1 = __importDefault(require("./routes/user"));
 const chat_1 = __importDefault(require("./routes/chat"));
 const notFound_1 = __importDefault(require("./routes/notFound"));
-const socket_1 = require("./socket");
-const express_graphql_1 = require("express-graphql");
-const schema_1 = __importDefault(require("./graphql/schema"));
-const resolvers_1 = __importDefault(require("./graphql/resolvers"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 const fileStorage = (0, multer_1.diskStorage)({
@@ -58,19 +55,6 @@ app.use((0, multer_1.default)({ storage: fileStorage, fileFilter: fileFilter }).
 app.use('/images', express_1.default.static(path_1.default.join(__dirname, 'images')));
 app.use(user_1.default);
 app.use(chat_1.default);
-app.use('/graphql', (0, express_graphql_1.graphqlHTTP)({
-    schema: schema_1.default,
-    rootValue: resolvers_1.default,
-    customFormatErrorFn(error) {
-        if (!error.originalError) {
-            return error;
-        }
-        const data = error.originalError.data || [];
-        const message = error.originalError.message || 'An error has ocurred';
-        const status = error.originalError.status || 500;
-        return { message, status, data };
-    }
-}));
 app.use(notFound_1.default);
 /*
     ERROR HANDLER
@@ -86,7 +70,7 @@ const port = 8080;
 const server = app.listen(port, () => {
     console.log(`Listening on port ${port}...`);
     const io = (0, socket_1.init)(server);
-    io.on('connection', (socket) => {
+    io.on('connection', () => {
         console.log('Client connected!');
     });
 });

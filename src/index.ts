@@ -4,16 +4,13 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import uniqid from 'uniqid';
 import cors from 'cors';
+import { init } from './socket';
 
 import userRoutes from './routes/user';
 import chatRoutes from './routes/chat';
 import notFoundRoutes from './routes/notFound';
-import { init } from './socket';
-import { StatusError } from './models';
-
-import { graphqlHTTP } from 'express-graphql';
-import graphqlSchema from './graphql/schema';
-import graphqlResolver from './graphql/resolvers';
+import { StatusError } from './types/StatusError';
+import { SocketData } from './types/Socket.types';
 
 const app = express();
 
@@ -44,23 +41,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(userRoutes);
 app.use(chatRoutes);
 
-app.use(
-	'/graphql',
-	graphqlHTTP({
-		schema: graphqlSchema,
-		rootValue: graphqlResolver,
-		customFormatErrorFn(error: GraphqlError) {
-			if (!error.originalError) {
-				return error;
-			}
-			const data = error.originalError.data || [];
-			const message = error.originalError.message || 'An error has ocurred';
-			const status = error.originalError.status || 500;
-			return { message, status, data };
-		}
-	})
-);
-
 app.use(notFoundRoutes);
 
 /*
@@ -78,7 +58,7 @@ const port = 8080;
 const server = app.listen(port, () => {
 	console.log(`Listening on port ${port}...`);
 	const io = init(server);
-	io.on('connection', (socket: SocketData) => {
+	io.on('connection', () => {
 		console.log('Client connected!');
 	});
 });
