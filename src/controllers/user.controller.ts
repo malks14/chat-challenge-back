@@ -70,7 +70,7 @@ export const createUser = (req, res, next): void => {
 			next(statusError);
 		}
 	} else {
-		res.status(422).json({
+		res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
 			attributes: { name, lastName, email, password }
 		});
@@ -102,7 +102,7 @@ export const logInUser = (req, res, next): void => {
 			next(statusError);
 		}
 	} else {
-		res.status(422).json({
+		res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
 			attributes: { email, password }
 		});

@@ -111,7 +111,7 @@ Si los datos del cuerpo de la request están correctos, se creará el usuario en
 |          Mail ingresado ya existe          |  409   |                                            { message: 'User already registered' }                                            |
 |                   Fallo                    |  500   |                                           { message: 'Error while fetching data' }                                           |
 |  No se encontró una imagen en la consulta  |  422   |                                              { message: 'Missing image file' }                                               |
-| Datos ingresados están en formato inválido |  422   | { message: 'Bad Request: Make sure all attributes and their types are OK', attributes: { name, lastName, email, password } } |
+| Datos ingresados están en formato inválido |  400   | { message: 'Bad Request: Make sure all attributes and their types are OK', attributes: { name, lastName, email, password } } |
 
 ##### Iniciar sesión
 
@@ -133,7 +133,7 @@ Si el email y la contraseña corresponden a un usuario existente, la consulta de
 |                   Exito                    |  201   |                             { message: 'Logged In successfully', userId, token }                             |
 |       Mail o contraseña incorrectos        |  401   |                                  { message: 'Incorrect email or password' }                                  |
 |                   Fallo                    |  500   |                                   { message: 'Error while fetching data' }                                   |
-| Datos ingresados están en formato inválido |  422   | { message: 'Bad Request: Make sure all attributes and their types are OK', attributes: { email, password } } |
+| Datos ingresados están en formato inválido |  400   | { message: 'Bad Request: Make sure all attributes and their types are OK', attributes: { email, password } } |
 
 #### 2. Acciones de chats
 
