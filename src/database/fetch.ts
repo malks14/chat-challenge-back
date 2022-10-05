@@ -48,10 +48,6 @@ export default class Database {
 		return Boolean(user && user.password === password);
 	}
 
-	static getUsers(): User[] {
-		return getDatabase();
-	}
-
 	/*
         CHATS
     */

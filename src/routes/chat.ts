@@ -14,8 +14,8 @@ const router = Router();
 */
 
 router.get('/chats', isAuth, getUserChats);
-router.post('/chats/:userId', isAuth, createChat);
-router.post('/chats/:userId/:chatId', isAuth, sendMessage);
-router.delete('/chats/:userId/:chatId', isAuth, deleteChat);
+router.post('/chats', isAuth, createChat);
+router.post('/chats/:chatId', isAuth, sendMessage);
+router.delete('/chats/:chatId', isAuth, deleteChat);
 
 export default router;

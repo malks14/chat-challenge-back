@@ -10,31 +10,14 @@ const { sign } = jwt;
 /*
     USERS CONTROLLERS
 */
-export const getUsers = (req, res, next): void => {
-	try {
-		const users = database.getUsers();
-		const visibleUsers = users.map(
-			({ userId, name, lastName, email, image }) => {
-				return {
-					userId,
-					name,
-					lastName,
-					email,
-					image
-				};
-			}
-		);
-		res.status(200).json(visibleUsers);
-	} catch (error) {
-		const statusError = new StatusError('Error while fetching data', 500);
-		next(statusError);
-	}
-};
 
 export const getUser = (req, res, next): void => {
-	const { userId } = req.params;
 	try {
-		const user = database.getUser(userId);
+		if (!req.user) {
+			res.status(401).json({ message: 'Unauthorized action' });
+			return;
+		}
+		const user = database.getUser(req.user);
 		if (user) {
 			res.status(200).json(user);
 			return;
@@ -48,7 +31,6 @@ export const getUser = (req, res, next): void => {
 
 export const deleteUser = (req, res, next): void => {
 	try {
-		// @ts-ignore
 		if (!req.user) {
 			res.status(401).json({ message: 'Unauthorized action' });
 			return;
