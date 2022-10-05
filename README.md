@@ -63,7 +63,7 @@ La API cuenta con endpoints para generar las acciones en el servidor. Las accion
 
 ##### Obtener el usuario loggeado
 
-##### GET /users
+##### `GET /users`
 
 Retorna toda la información del usuario con ID pasada por parámetro.
 
@@ -76,7 +76,7 @@ Retorna toda la información del usuario con ID pasada por parámetro.
 
 ##### Eliminar el usuario loggeado
 
-##### DELETE /users
+##### `DELETE /users`
 
 Elimina al usuario con ID pasada por parámetro. Requiere pasarle un **Auth token** como encabezado de autenticación a la consulta. Ese token es otorgado en la respuesta en formato JSON a la hora de iniciar sesión (detallado más adelante).
 
@@ -89,7 +89,7 @@ Elimina al usuario con ID pasada por parámetro. Requiere pasarle un **Auth toke
 
 ##### Crear un usuario
 
-##### POST /signup
+##### `POST /signup`
 
 En el body de la request:
 
@@ -115,7 +115,7 @@ Si los datos del cuerpo de la request están correctos, se creará el usuario en
 
 ##### Iniciar sesión
 
-##### POST /login
+##### `POST /login`
 
 En el body de la request:
 
@@ -139,7 +139,7 @@ Si el email y la contraseña corresponden a un usuario existente, la consulta de
 
 ##### Obtener todos los chats del usuario loggeado
 
-##### GET /chats
+##### `GET /chats`
 
 Retorna toda la información de los chats del usuario con todos sus respectivos mensajes. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
@@ -150,7 +150,7 @@ Retorna toda la información de los chats del usuario con todos sus respectivos 
 
 ##### Crear un chat para el usuario loggeado
 
-##### POST /chats
+##### `POST /chats`
 
 En el body de la request:
 
@@ -171,7 +171,7 @@ Crea un nuevo chat con una persna con el nombre y foto de perfil dados en el cue
 
 ##### Enviar nuevo mensaje a un chat del usuario loggeado
 
-##### POST /chats/:chatId
+##### `POST /chats/:chatId`
 
 En el body de la request:
 
@@ -192,7 +192,7 @@ Envía un nuevo mensaje desde el usuario con _userId_ al chat con _chatId_ ingre
 
 ##### Eliminar un chat del usuario loggeado
 
-##### DELETE /chats/:chatId
+##### `DELETE /chats/:chatId`
 
 Elimina el chat con _chatId_ del usuario con _userId_ ingresados por parámetro. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 

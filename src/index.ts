@@ -48,10 +48,9 @@ app.use(notFoundRoutes);
 */
 app.use((error: any, req: any, res: any, next: any): void => {
 	const statusError = error as StatusError;
-	const status = statusError.status;
+	const status = statusError.status ?? 500;
 	const message = statusError.message;
-	res.status(status).json({ message });
-	return;
+	return res.status(status).json({ message });
 });
 
 const port = 8080;

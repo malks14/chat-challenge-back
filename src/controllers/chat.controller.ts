@@ -115,6 +115,7 @@ export const deleteChat = (req, res, next): void => {
 
 const sendReplyMessage = (userId: string, chatId: string): void => {
 	try {
+		randomChanceOfError();
 		const chat = database.getUserChat(userId, chatId);
 		if (chat) {
 			const text = `Este es un mensaje de prueba! Deberías de recibir este mensaje luego de 5 segundos de haber enviado uno.`;
@@ -135,3 +136,13 @@ const sendReplyMessage = (userId: string, chatId: string): void => {
 		});
 	}
 };
+
+const randomChanceOfError = () => {
+	const chance = randomIntFromInterval(1, 10);
+	if (chance >= 8) {
+		throw new Error();
+	}
+};
+
+const randomIntFromInterval = (min: number, max: number) =>
+	Math.floor(Math.random() * (max - min + 1) + min);
