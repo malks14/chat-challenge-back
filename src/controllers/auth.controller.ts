@@ -1,22 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { StatusError } from '../types/StatusError';
 
 const { verify } = jwt;
 
-interface ControllerFunction {
-	(req: Request, res: Response, next: NextFunction): void;
-}
-
 /*
     IS AUTH CONTROLLER
 */
-export const isAuth: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
+export const isAuth = (req, res, next): void => {
 	// 1. Get auth header
 	const authHeader = req.get('Authorization');
 	if (!authHeader) {
@@ -25,9 +16,8 @@ export const isAuth: ControllerFunction = (
 	}
 
 	// 2. obtain token
-	// @ts-ignore
-	const token = authHeader.split(' ')[1];
-	let decodedToken;
+	const token = authHeader!.split(' ')[1];
+	let decodedToken: any;
 	try {
 		decodedToken = verify(token, 'toremsoftware');
 	} catch (error) {
@@ -42,6 +32,6 @@ export const isAuth: ControllerFunction = (
 	}
 
 	// @ts-ignore
-	req.userId = decodedToken.userId;
+	req.user = decodedToken!.userId;
 	next();
 };

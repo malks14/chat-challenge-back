@@ -12,9 +12,10 @@ const router = Router();
 /*
     CHATS ROUTES
 */
-router.get('/chat/:userId', isAuth, getUserChats);
-router.post('/chat/:userId', isAuth, createChat);
-router.post('/chat/:userId/:chatId', isAuth, sendMessage);
-router.delete('/chat/:userId/:chatId', isAuth, deleteChat);
+
+router.get('/chats', isAuth, getUserChats);
+router.post('/chats/:userId', isAuth, createChat);
+router.post('/chats/:userId/:chatId', isAuth, sendMessage);
+router.delete('/chats/:userId/:chatId', isAuth, deleteChat);
 
 export default router;

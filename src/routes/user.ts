@@ -13,10 +13,10 @@ const router = Router();
 /*
     USERS ROUTES
 */
-router.get('/user', getUsers);
-router.get('/user/:userId', getUser);
-router.delete('/user/:userId', isAuth, deleteUser);
-router.post('/user/create', createUser);
-router.post('/user/login', logInUser);
+router.get('/users', getUsers);
+router.get('/users/:userId', getUser);
+router.delete('/users/:userId', isAuth, deleteUser);
+router.post('/signup', createUser);
+router.post('/login', logInUser);
 
 export default router;

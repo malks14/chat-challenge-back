@@ -1,30 +1,19 @@
-import { Request, Response, NextFunction } from 'express';
-
 import database from '../database/fetch';
 import { StatusError } from '../types/StatusError';
 import { Chat, Message } from '../models';
 import { getIO } from '../socket';
 
-interface ControllerFunction {
-	(req: Request, res: Response, next: NextFunction): void;
-}
-
 /*
     CHAT CONTROLLERS
 */
-export const getUserChats: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
-	const { userId } = req.params;
+export const getUserChats = (req, res, next): void => {
 	try {
 		// @ts-ignore
-		if (!req.userId || req.userId !== userId) {
+		if (!req.user) {
 			res.status(401).json({ message: 'Unauthorized action' });
 			return;
 		}
-		const chats = database.getUserChats(userId);
+		const chats = database.getUserChats(req.user);
 		res.status(200).json({ chats });
 		return;
 	} catch (error) {
@@ -33,14 +22,10 @@ export const getUserChats: ControllerFunction = (
 	}
 };
 
-export const createChat: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
+export const createChat = (req, res, next): void => {
 	const { userId } = req.params;
 	// @ts-ignore
-	if (!req.userId || req.userId !== userId) {
+	if (!req.user || req.user !== userId) {
 		res.status(401).json({ message: 'Unauthorized action' });
 		return;
 	}
@@ -66,32 +51,28 @@ export const createChat: ControllerFunction = (
 	}
 };
 
-export const sendMessage: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
-	const { userId, chatId } = req.params;
+export const sendMessage = (req, res, next): void => {
+	const { chatId } = req.params;
 	// @ts-ignore
-	if (!req.userId || req.userId !== userId) {
+	if (!req.user) {
 		res.status(401).json({ message: 'Unauthorized action' });
 		return;
 	}
 	try {
-		const chat = database.getUserChat(userId, chatId);
+		const chat = database.getUserChat(req.user, chatId);
 		if (chat) {
 			const { message } = req.body;
 			const msg = new Message(message, false);
-			database.sendMessage(userId, chatId, msg);
+			database.sendMessage(req.user, chatId, msg);
 			// @ts-ignore
 			getIO().emit('chats', {
 				action: 'SentNewMessage',
-				userId,
+				userId: req.user,
 				chatId: chat.chatId
 			});
 			res.status(201).json({ message: 'Message sent successfully' });
 			// sends reply after 5 seconds
-			setTimeout(() => sendReplyMessage(userId, chatId), 5000);
+			setTimeout(() => sendReplyMessage(req.user, chatId), 5000);
 			return;
 		} else {
 			res.status(404).json({ message: 'Could not find user chat' });
@@ -103,25 +84,21 @@ export const sendMessage: ControllerFunction = (
 	}
 };
 
-export const deleteChat: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
-	const { userId, chatId } = req.params;
+export const deleteChat = (req, res, next): void => {
+	const { chatId } = req.params;
 	// @ts-ignore
-	if (!req.userId || req.userId !== userId) {
+	if (!req.user) {
 		res.status(401).json({ message: 'Unauthorized action' });
 		return;
 	}
 	try {
-		const chat = database.getUserChat(userId, chatId);
+		const chat = database.getUserChat(req.user, chatId);
 		if (chat) {
-			database.deleteChat(userId, chatId);
+			database.deleteChat(req.user, chatId);
 			// @ts-ignore
 			getIO().emit('chats', {
 				action: 'delete',
-				userId,
+				userId: req.user,
 				chatId: chat.chatId
 			});
 			res.status(201).json({ message: 'Chat history deleted successfully' });

@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 import database from '../database/fetch';
@@ -8,18 +7,10 @@ import { StatusError } from '../types/StatusError';
 
 const { sign } = jwt;
 
-interface ControllerFunction {
-	(req: Request, res: Response, next: NextFunction): void;
-}
-
 /*
     USERS CONTROLLERS
 */
-export const getUsers: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
+export const getUsers = (req, res, next): void => {
 	try {
 		const users = database.getUsers();
 		const visibleUsers = users.map(
@@ -40,11 +31,7 @@ export const getUsers: ControllerFunction = (
 	}
 };
 
-export const getUser: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
+export const getUser = (req, res, next): void => {
 	const { userId } = req.params;
 	try {
 		const user = database.getUser(userId);
@@ -59,19 +46,14 @@ export const getUser: ControllerFunction = (
 	}
 };
 
-export const deleteUser: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
-	const { userId } = req.params;
+export const deleteUser = (req, res, next): void => {
 	try {
 		// @ts-ignore
-		if (!req.userId || req.userId !== userId) {
+		if (!req.user) {
 			res.status(401).json({ message: 'Unauthorized action' });
 			return;
 		}
-		database.deleteUser(userId);
+		database.deleteUser(req.user);
 		// @ts-ignore
 		getIO().emit('users', { action: 'delete', userId });
 		res.status(201).json({ message: 'User deleted successfully' });
@@ -81,11 +63,7 @@ export const deleteUser: ControllerFunction = (
 	}
 };
 
-export const createUser: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
+export const createUser = (req, res, next): void => {
 	const { name, lastName, email, password } = req.body;
 	const image = req.file?.path;
 	if (!image) {
@@ -117,11 +95,7 @@ export const createUser: ControllerFunction = (
 	}
 };
 
-export const logInUser: ControllerFunction = (
-	req: Request,
-	res: Response,
-	next: NextFunction
-): void => {
+export const logInUser = (req, res, next): void => {
 	const { email, password } = req.body;
 	if (validAttributes('', '', email, password, '')) {
 		try {
