@@ -31,7 +31,6 @@ export const isAuth = (req, res, next): void => {
 		next(statusError);
 	}
 
-	// @ts-ignore
 	req.user = decodedToken!.userId;
 	next();
 };

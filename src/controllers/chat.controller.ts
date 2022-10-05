@@ -8,7 +8,6 @@ import { getIO } from '../socket';
 */
 export const getUserChats = (req, res, next): void => {
 	try {
-		// @ts-ignore
 		if (!req.user) {
 			res.status(401).json({ message: 'Unauthorized action' });
 			return;
@@ -23,9 +22,7 @@ export const getUserChats = (req, res, next): void => {
 };
 
 export const createChat = (req, res, next): void => {
-	const { userId } = req.params;
-	// @ts-ignore
-	if (!req.user || req.user !== userId) {
+	if (!req.user) {
 		res.status(401).json({ message: 'Unauthorized action' });
 		return;
 	}
@@ -34,9 +31,13 @@ export const createChat = (req, res, next): void => {
 		const image = req.file?.path;
 		if (name && image) {
 			const chat = new Chat(name, image);
-			database.createChat(userId, chat);
+			database.createChat(req.user, chat);
 			// @ts-ignore
-			getIO().emit('chats', { action: 'create', userId, chatId: chat.chatId });
+			getIO().emit('chats', {
+				action: 'create',
+				userId: req.user,
+				chatId: chat.chatId
+			});
 			res.status(201).json({ message: 'Chat created successfully' });
 			return;
 		} else {
@@ -53,7 +54,7 @@ export const createChat = (req, res, next): void => {
 
 export const sendMessage = (req, res, next): void => {
 	const { chatId } = req.params;
-	// @ts-ignore
+
 	if (!req.user) {
 		res.status(401).json({ message: 'Unauthorized action' });
 		return;
@@ -86,7 +87,6 @@ export const sendMessage = (req, res, next): void => {
 
 export const deleteChat = (req, res, next): void => {
 	const { chatId } = req.params;
-	// @ts-ignore
 	if (!req.user) {
 		res.status(401).json({ message: 'Unauthorized action' });
 		return;
