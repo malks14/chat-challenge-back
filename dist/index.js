@@ -40,7 +40,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 const fileStorage = (0, multer_1.diskStorage)({
     destination: (req, file, callback) => {
-        callback(null, 'dist/images');
+        callback(null, 'images');
     },
     filename: (req, file, callback) => {
         callback(null, `${(0, uniqid_1.default)()}-${file.originalname}`);
@@ -52,7 +52,7 @@ const fileFilter = (req, file, callback) => {
 };
 app.use(body_parser_1.default.json());
 app.use((0, multer_1.default)({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
-app.use('/images', express_1.default.static(path_1.default.join(__dirname, 'images')));
+app.use('/images', express_1.default.static(path_1.default.join(__dirname, '..', 'images')));
 app.use(user_1.default);
 app.use(chat_1.default);
 app.use(notFound_1.default);

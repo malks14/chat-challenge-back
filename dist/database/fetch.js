@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const dataPath = path_1.default.join(__dirname, 'data.json');
+const dataPath = path_1.default.join(__dirname, '..', '..', 'data.json');
 const getDatabase = () => {
     const rawJSON = fs_1.default.readFileSync(dataPath, 'utf-8');
     return JSON.parse(rawJSON);

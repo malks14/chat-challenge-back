@@ -18,7 +18,7 @@ app.use(cors());
 
 const fileStorage = diskStorage({
 	destination: (req, file, callback) => {
-		callback(null, 'dist/images');
+		callback(null, 'images');
 	},
 	filename: (req, file, callback) => {
 		callback(null, `${uniqid()}-${file.originalname}`);
@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, '..', 'images')));
 
 app.use(userRoutes);
 app.use(chatRoutes);

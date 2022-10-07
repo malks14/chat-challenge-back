@@ -5,7 +5,7 @@ import { ChatInterface } from '../types/Chat.types';
 
 type DB = User[];
 
-const dataPath: string = path.join(__dirname, 'data.json');
+const dataPath: string = path.join(__dirname, '..', '..', 'data.json');
 
 const getDatabase = (): DB => {
 	const rawJSON: string = fs.readFileSync(dataPath, 'utf-8');
