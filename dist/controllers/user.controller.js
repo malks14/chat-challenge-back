@@ -25,7 +25,7 @@ const getUser = (req, res, next) => {
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-        next(statusError);
+        return next(statusError);
     }
 };
 exports.getUser = getUser;
@@ -41,7 +41,7 @@ const deleteUser = (req, res, next) => {
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-        next(statusError);
+        return next(statusError);
     }
 };
 exports.deleteUser = deleteUser;
@@ -67,7 +67,7 @@ const createUser = (req, res, next) => {
         }
         catch (error) {
             const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-            next(statusError);
+            return next(statusError);
         }
     }
     else {
@@ -88,16 +88,14 @@ const logInUser = (req, res, next) => {
                 const token = sign({
                     userId
                 }, 'toremsoftware', { expiresIn: '1h' });
-                res
-                    .status(201)
-                    .json({ message: 'Logged In successfully', userId, token });
+                res.status(201).json({ message: 'Logged In successfully', userId, token });
                 return;
             }
             res.status(401).json({ message: 'Incorrect email or password' });
         }
         catch (error) {
             const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-            next(statusError);
+            return next(statusError);
         }
     }
     else {

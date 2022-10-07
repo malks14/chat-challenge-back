@@ -60,9 +60,7 @@ export default class Database {
 	static getUserChat(userId: string, chatId: string): Chat | undefined {
 		const users = getDatabase();
 		const requestedUser = users.find((user) => user.userId === userId);
-		return requestedUser?.chats.find(
-			(chat: ChatInterface) => chat.chatId === chatId
-		);
+		return requestedUser?.chats.find((chat: ChatInterface) => chat.chatId === chatId);
 	}
 
 	static createChat(userId: string, chat: Chat): void {
@@ -80,9 +78,7 @@ export default class Database {
 		let users: DB = getDatabase();
 		users = users.map((user) => {
 			if (user.userId === userId) {
-				user.chats = user.chats.filter(
-					(chat: ChatInterface) => chat.chatId !== chatId
-				);
+				user.chats = user.chats.filter((chat: ChatInterface) => chat.chatId !== chatId);
 			}
 			return user;
 		});

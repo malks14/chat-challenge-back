@@ -32,9 +32,7 @@ const fileFilter = (req: Request, file: any, callback: Function) => {
 
 app.use(bodyParser.json());
 
-app.use(
-	multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
-);
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

@@ -20,7 +20,7 @@ const getUserChats = (req, res, next) => {
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Unauthorized action', 401);
-        next(statusError);
+        return next(statusError);
     }
 };
 exports.getUserChats = getUserChats;
@@ -45,15 +45,13 @@ const createChat = (req, res, next) => {
             return;
         }
         else {
-            res
-                .status(400)
-                .json({ message: 'Must provide a valid recipient name and image' });
+            res.status(400).json({ message: 'Must provide a valid recipient name and image' });
             return;
         }
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-        next(statusError);
+        return next(statusError);
     }
 };
 exports.createChat = createChat;
@@ -85,7 +83,7 @@ const sendMessage = (req, res, next) => {
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-        next(statusError);
+        return next(statusError);
     }
 };
 exports.sendMessage = sendMessage;
@@ -114,7 +112,7 @@ const deleteChat = (req, res, next) => {
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Error while fetching data', 500);
-        next(statusError);
+        return next(statusError);
     }
 };
 exports.deleteChat = deleteChat;

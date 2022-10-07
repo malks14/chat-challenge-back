@@ -11,7 +11,7 @@ const isAuth = (req, res, next) => {
     const authHeader = req.get('Authorization');
     if (!authHeader) {
         const statusError = new StatusError_1.StatusError('Unauthorized action', 401);
-        next(statusError);
+        return next(statusError);
     }
     let decodedToken;
     try {
@@ -20,11 +20,11 @@ const isAuth = (req, res, next) => {
     }
     catch (error) {
         const statusError = new StatusError_1.StatusError('Unauthorized action', 401);
-        next(statusError);
+        return next(statusError);
     }
     if (!decodedToken) {
         const statusError = new StatusError_1.StatusError('Unauthorized action', 401);
-        next(statusError);
+        return next(statusError);
     }
     req.user = decodedToken.userId;
     next();

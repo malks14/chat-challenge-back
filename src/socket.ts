@@ -10,15 +10,13 @@ import {
 let io: ServerType;
 
 export function init(httpServer: any) {
-	io = new Server<
-		ClientToServerEvents,
-		ServerToClientEvents,
-		InterServerEvents,
-		SocketData
-	>(httpServer, {
-		// @ts-ignore
-		method: 'GET'
-	});
+	io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(
+		httpServer,
+		{
+			// @ts-ignore
+			method: 'GET'
+		}
+	);
 	return io;
 }
 

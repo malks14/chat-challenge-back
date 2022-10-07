@@ -1,10 +1,5 @@
 import { Router } from 'express';
-import {
-	getUserChats,
-	createChat,
-	sendMessage,
-	deleteChat
-} from '../controllers/chat.controller';
+import { getUserChats, createChat, sendMessage, deleteChat } from '../controllers/chat.controller';
 import { isAuth } from '../controllers/auth.controller';
 
 const router = Router();
