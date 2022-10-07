@@ -32,14 +32,14 @@ export const getUser = (req, res, next): void => {
 export const deleteUser = (req, res, next): void => {
 	try {
 		if (!req.user) {
-			res.status(401).json({ message: 'Unauthorized action' });
-			return;
+			return res.status(401).json({ message: 'Unauthorized action' });
 		}
 		database.deleteUser(req.user);
 		// @ts-ignore
 		getIO().emit('users', { action: 'delete', userId });
-		res.status(201).json({ message: 'User deleted successfully' });
+		return res.status(201).json({ message: 'User deleted successfully' });
 	} catch (error) {
+		console.log(error);
 		const statusError = new StatusError('Error while fetching data', 500);
 		return next(statusError);
 	}

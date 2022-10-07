@@ -10,7 +10,6 @@ import userRoutes from './routes/user';
 import chatRoutes from './routes/chat';
 import notFoundRoutes from './routes/notFound';
 import { StatusError } from './types/StatusError';
-import { SocketData } from './types/Socket.types';
 
 const app = express();
 
