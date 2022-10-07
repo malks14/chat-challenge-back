@@ -25,7 +25,7 @@ export const getUser = (req, res, next): void => {
 		res.status(404).json({ message: 'User not found' });
 	} catch (error) {
 		const statusError = new StatusError('Error while fetching data', 500);
-		next(statusError);
+		return next(statusError);
 	}
 };
 
@@ -41,7 +41,7 @@ export const deleteUser = (req, res, next): void => {
 		res.status(201).json({ message: 'User deleted successfully' });
 	} catch (error) {
 		const statusError = new StatusError('Error while fetching data', 500);
-		next(statusError);
+		return next(statusError);
 	}
 };
 
@@ -67,7 +67,7 @@ export const createUser = (req, res, next): void => {
 			return;
 		} catch (error) {
 			const statusError = new StatusError('Error while fetching data', 500);
-			next(statusError);
+			return next(statusError);
 		}
 	} else {
 		res.status(400).json({
@@ -91,15 +91,13 @@ export const logInUser = (req, res, next): void => {
 					'toremsoftware',
 					{ expiresIn: '1h' }
 				);
-				res
-					.status(201)
-					.json({ message: 'Logged In successfully', userId, token });
+				res.status(201).json({ message: 'Logged In successfully', userId, token });
 				return;
 			}
 			res.status(401).json({ message: 'Incorrect email or password' });
 		} catch (error) {
 			const statusError = new StatusError('Error while fetching data', 500);
-			next(statusError);
+			return next(statusError);
 		}
 	} else {
 		res.status(400).json({
@@ -109,13 +107,7 @@ export const logInUser = (req, res, next): void => {
 	}
 };
 
-const validAttributes = (
-	name: any,
-	lastName: any,
-	email: any,
-	password: any,
-	image: any
-) => {
+const validAttributes = (name: any, lastName: any, email: any, password: any, image: any) => {
 	return (
 		typeof name == 'string' &&
 		typeof lastName == 'string' &&

@@ -12,23 +12,23 @@ export const isAuth = (req, res, next): void => {
 	const authHeader = req.get('Authorization');
 	if (!authHeader) {
 		const statusError = new StatusError('Unauthorized action', 401);
-		next(statusError);
+		return next(statusError);
 	}
 
 	// 2. obtain token
-	const token = authHeader!.split(' ')[1];
 	let decodedToken: any;
 	try {
+		const token = authHeader!.split(' ')[1];
 		decodedToken = verify(token, 'toremsoftware');
 	} catch (error) {
 		const statusError = new StatusError('Unauthorized action', 401);
-		next(statusError);
+		return next(statusError);
 	}
 
 	// 3. verify
 	if (!decodedToken) {
 		const statusError = new StatusError('Unauthorized action', 401);
-		next(statusError);
+		return next(statusError);
 	}
 
 	req.user = decodedToken!.userId;

@@ -13,9 +13,9 @@ const isAuth = (req, res, next) => {
         const statusError = new StatusError_1.StatusError('Unauthorized action', 401);
         next(statusError);
     }
-    const token = authHeader.split(' ')[1];
     let decodedToken;
     try {
+        const token = authHeader.split(' ')[1];
         decodedToken = verify(token, 'toremsoftware');
     }
     catch (error) {
