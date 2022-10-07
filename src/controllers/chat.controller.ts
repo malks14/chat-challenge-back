@@ -36,7 +36,7 @@ export const createChat = (req, res, next): void => {
 			getIO().emit('chats', {
 				action: 'create',
 				userId: req.user,
-				chatId: chat.chatId
+				chatId: chat.chatId,
 			});
 			res.status(201).json({ message: 'Chat created successfully' });
 			return;
@@ -61,21 +61,23 @@ export const sendMessage = (req, res, next): void => {
 		const chat = database.getUserChat(req.user, chatId);
 		if (chat) {
 			const { message } = req.body;
+			if (!message) {
+				return res.status(400).json({ message: 'Must provided a message to send' });
+			}
 			const msg = new Message(message, false);
 			database.sendMessage(req.user, chatId, msg);
 			// @ts-ignore
 			getIO().emit('chats', {
 				action: 'SentNewMessage',
 				userId: req.user,
-				chatId: chat.chatId
+				chatId: chat.chatId,
 			});
 			res.status(201).json({ message: 'Message sent successfully' });
 			// sends reply after 5 seconds
 			setTimeout(() => sendReplyMessage(req.user, chatId), 5000);
 			return;
 		} else {
-			res.status(404).json({ message: 'Could not find user chat' });
-			return;
+			return res.status(404).json({ message: 'Could not find user chat' });
 		}
 	} catch (error) {
 		const statusError = new StatusError('Error while fetching data', 500);
@@ -97,7 +99,7 @@ export const deleteChat = (req, res, next): void => {
 			getIO().emit('chats', {
 				action: 'delete',
 				userId: req.user,
-				chatId: chat.chatId
+				chatId: chat.chatId,
 			});
 			res.status(201).json({ message: 'Chat history deleted successfully' });
 			return;
@@ -123,14 +125,14 @@ const sendReplyMessage = (userId: string, chatId: string): void => {
 			getIO().emit('chats', {
 				action: 'ReceivedNewMessage',
 				userId,
-				chatId: chat.chatId
+				chatId: chat.chatId,
 			});
 		}
 	} catch (error) {
 		// @ts-ignore
 		getIO.emit('chats', {
 			action: 'error',
-			error: 'Could not fetch database while sending a reply message'
+			error: 'Could not fetch database while sending a reply message',
 		});
 	}
 };

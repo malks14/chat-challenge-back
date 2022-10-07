@@ -17,13 +17,7 @@ export class User implements UserInterface {
 
 	chats: ChatInterface[];
 
-	constructor(
-		name: string,
-		lastName: string,
-		email: string,
-		password: string,
-		image: string
-	) {
+	constructor(name: string, lastName: string, email: string, password: string, image: string) {
 		this.userId = uniqid();
 		this.name = name;
 		this.lastName = lastName;

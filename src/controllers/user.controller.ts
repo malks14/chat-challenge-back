@@ -72,7 +72,7 @@ export const createUser = (req, res, next): void => {
 	} else {
 		res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
-			attributes: { name, lastName, email, password }
+			attributes: { name, lastName, email, password },
 		});
 	}
 };
@@ -86,7 +86,7 @@ export const logInUser = (req, res, next): void => {
 				const { userId } = database.getUserByEmail(email) as User;
 				const token = sign(
 					{
-						userId
+						userId,
 					},
 					'toremsoftware',
 					{ expiresIn: '1h' }
@@ -102,7 +102,7 @@ export const logInUser = (req, res, next): void => {
 	} else {
 		res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
-			attributes: { email, password }
+			attributes: { email, password },
 		});
 	}
 };

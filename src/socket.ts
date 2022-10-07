@@ -4,7 +4,7 @@ import {
 	InterServerEvents,
 	ServerToClientEvents,
 	ServerType,
-	SocketData
+	SocketData,
 } from './types/Socket.types';
 
 let io: ServerType;
@@ -14,7 +14,7 @@ export function init(httpServer: any) {
 		httpServer,
 		{
 			// @ts-ignore
-			method: 'GET'
+			method: 'GET',
 		}
 	);
 	return io;

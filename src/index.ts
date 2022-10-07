@@ -21,7 +21,7 @@ const fileStorage = diskStorage({
 	},
 	filename: (req, file, callback) => {
 		callback(null, `${uniqid()}-${file.originalname}`);
-	}
+	},
 });
 
 const fileFilter = (req: Request, file: any, callback: Function) => {
