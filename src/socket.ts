@@ -26,3 +26,12 @@ export function getIO(): ServerType {
 	}
 	return io;
 }
+
+export function emitSocket(type: string, params: Object) {
+	try {
+		// @ts-ignore
+		getIO().emit(type, params);
+	} catch (error) {
+		console.log(error);
+	}
+}

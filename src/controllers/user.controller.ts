@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import database from '../database/fetch';
 import { User } from '../models/User';
-import { getIO } from '../socket';
+import { emitSocket } from '../socket';
 import { StatusError } from '../types/StatusError';
 
 const { sign } = jwt;
@@ -35,8 +35,11 @@ export const deleteUser = (req, res, next): void => {
 			return res.status(401).json({ message: 'Unauthorized action' });
 		}
 		database.deleteUser(req.user);
-		// @ts-ignore
-		getIO().emit('users', { action: 'delete', userId });
+		try {
+			emitSocket('users', { action: 'delete', userId: req.user });
+		} catch (error) {
+			console.log(error);
+		}
 		return res.status(201).json({ message: 'User deleted successfully' });
 	} catch (error) {
 		console.log(error);
@@ -58,8 +61,11 @@ export const createUser = (req, res, next): void => {
 		try {
 			if (!database.getUserByEmail(email)) {
 				database.createUser(user);
-				// @ts-ignore
-				getIO().emit('users', { action: 'register', userId: user.userId });
+				try {
+					emitSocket('users', { action: 'register', userId: user.userId });
+				} catch (error) {
+					console.log(error);
+				}
 				res.status(201).json({ message: 'User registered successfully' });
 				return;
 			}
