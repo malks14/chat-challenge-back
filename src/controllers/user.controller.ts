@@ -12,17 +12,19 @@ const { sign } = jwt;
 */
 
 export const getUser = (req, res, next): void => {
+	if (!req.user) {
+		const statusError = new StatusError('Unauthorized action', 401);
+		return next(statusError);
+	}
+
 	try {
-		if (!req.user) {
-			res.status(401).json({ message: 'Unauthorized action' });
-			return;
-		}
 		const user = database.getUser(req.user);
-		if (user) {
-			res.status(200).json(user);
-			return;
+		if (!user) {
+			const statusError = new StatusError('User not found', 404);
+			return next(statusError);
 		}
-		res.status(404).json({ message: 'User not found' });
+
+		return res.status(200).json(user);
 	} catch (error) {
 		const statusError = new StatusError('Error while fetching data', 500);
 		return next(statusError);
@@ -30,19 +32,18 @@ export const getUser = (req, res, next): void => {
 };
 
 export const deleteUser = (req, res, next): void => {
+	if (!req.user) {
+		const statusError = new StatusError('Unauthorized action', 401);
+		return next(statusError);
+	}
+
 	try {
-		if (!req.user) {
-			return res.status(401).json({ message: 'Unauthorized action' });
-		}
 		database.deleteUser(req.user);
-		try {
-			emitSocket('users', { action: 'delete', userId: req.user });
-		} catch (error) {
-			console.log(error);
-		}
+
+		emitSocket('users', { action: 'delete', userId: req.user });
+
 		return res.status(201).json({ message: 'User deleted successfully' });
 	} catch (error) {
-		console.log(error);
 		const statusError = new StatusError('Error while fetching data', 500);
 		return next(statusError);
 	}
@@ -51,74 +52,76 @@ export const deleteUser = (req, res, next): void => {
 export const createUser = (req, res, next): void => {
 	const { name, lastName, email, password } = req.body;
 	const image = req.file?.path;
+
 	if (!image) {
-		res.status(422).json({ message: 'Missing image file' });
-		return;
+		const statusError = new StatusError('Missing image file', 422);
+		return next(statusError);
 	}
-	// could be done with express-validator
-	if (validAttributes(name, lastName, email, password, image)) {
-		const user: User = new User(name, lastName, email, password, image);
-		try {
-			if (!database.getUserByEmail(email)) {
-				database.createUser(user);
-				try {
-					emitSocket('users', { action: 'register', userId: user.userId });
-				} catch (error) {
-					console.log(error);
-				}
-				res.status(201).json({ message: 'User registered successfully' });
-				return;
-			}
-			res.status(409).json({ message: 'User already registered' });
-			return;
-		} catch (error) {
-			const statusError = new StatusError('Error while fetching data', 500);
-			return next(statusError);
-		}
-	} else {
-		res.status(400).json({
+
+	if (!validAttributes(name, lastName, email, password, image)) {
+		return res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
 			attributes: { name, lastName, email, password },
 		});
+	}
+
+	try {
+		if (database.getUserByEmail(email)) {
+			const statusError = new StatusError('User already registered', 409);
+			return next(statusError);
+		}
+
+		const user: User = new User(name, lastName, email, password, image);
+
+		database.createUser(user);
+
+		emitSocket('users', { action: 'register', userId: user.userId });
+
+		return res.status(201).json({ message: 'User registered successfully' });
+	} catch (error) {
+		const statusError = new StatusError('Error while fetching data', 500);
+		return next(statusError);
 	}
 };
 
 export const logInUser = (req, res, next): void => {
 	const { email, password } = req.body;
-	if (validAttributes('', '', email, password, '')) {
-		try {
-			const ok = database.existsUser(email, password);
-			if (ok) {
-				const { userId } = database.getUserByEmail(email) as User;
-				const token = sign(
-					{
-						userId,
-					},
-					'toremsoftware',
-					{ expiresIn: '1h' }
-				);
-				res.status(201).json({ message: 'Logged In successfully', userId, token });
-				return;
-			}
-			res.status(401).json({ message: 'Incorrect email or password' });
-		} catch (error) {
-			const statusError = new StatusError('Error while fetching data', 500);
-			return next(statusError);
-		}
-	} else {
-		res.status(400).json({
+
+	if (!validAttributes('', '', email, password, '')) {
+		return res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
 			attributes: { email, password },
 		});
 	}
+
+	try {
+		const ok = database.existsUser(email, password);
+		if (!ok) {
+			return res.status(401).json({ message: 'Incorrect email or password' });
+		}
+
+		const { userId } = database.getUserByEmail(email) as User;
+		const token = sign(
+			{
+				userId,
+			},
+			'toremsoftware',
+			{ expiresIn: '1h' }
+		);
+
+		return res.status(201).json({ message: 'Logged In successfully', userId, token });
+	} catch (error) {
+		const statusError = new StatusError('Error while fetching data', 500);
+		return next(statusError);
+	}
 };
 
-const validAttributes = (name: any, lastName: any, email: any, password: any, image: any) => {
+const validAttributes = (email: any, password: any, name?: any, lastName?: any, image?: any) => {
 	return (
-		typeof name == 'string' &&
-		typeof lastName == 'string' &&
 		typeof email == 'string' &&
 		typeof password == 'string' &&
-		typeof image == 'string'
+		(name ?? typeof name == 'string') &&
+		(lastName ?? typeof lastName == 'string') &&
+		(image ?? typeof image == 'string')
 	);
 };
