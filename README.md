@@ -65,7 +65,7 @@ La API cuenta con endpoints para generar las acciones en el servidor. Las accion
 
 ##### `GET /users`
 
-Retorna toda la información del usuario con ID pasada por parámetro.
+Retorna toda la información del usuario loggeado. El ID del usuario es obtenido mediante el JWT.
 
 |      Caso      | Status |                Respuesta                 |
 | :------------: | :----: | :--------------------------------------: |
@@ -78,7 +78,7 @@ Retorna toda la información del usuario con ID pasada por parámetro.
 
 ##### `DELETE /users`
 
-Elimina al usuario con ID pasada por parámetro. Requiere pasarle un **Auth token** como encabezado de autenticación a la consulta. Ese token es otorgado en la respuesta en formato JSON a la hora de iniciar sesión (detallado más adelante).
+Elimina al usuario loggeado. El ID del usuario es obtenido mediante el JWT.
 
 |      Caso      | Status |                Respuesta                 |
 | :------------: | :----: | :--------------------------------------: |
@@ -181,7 +181,7 @@ En el body de la request:
 }
 ```
 
-Envía un nuevo mensaje desde el usuario con _userId_ al chat con _chatId_ ingresados por parámetro y con el texto dado en el cuerpo de la request. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
+Envía un nuevo mensaje desde el usuario al chat con _chatId_ ingresado por parámetro y con el texto dado en el cuerpo de la request. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
 |      Caso      | Status |                Respuesta                 |
 | :------------: | :----: | :--------------------------------------: |
@@ -194,7 +194,7 @@ Envía un nuevo mensaje desde el usuario con _userId_ al chat con _chatId_ ingre
 
 ##### `DELETE /chats/:chatId`
 
-Elimina el chat con _chatId_ del usuario con _userId_ ingresados por parámetro. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
+Elimina el chat con _chatId_ del de la lista de chats del usuario. Debe incluirse el **Auth Token** del usuario en la consulta para que ésta tenga efecto.
 
 |      Caso      | Status |                    Respuesta                     |
 | :------------: | :----: | :----------------------------------------------: |
@@ -291,7 +291,7 @@ on 'chats'
     chatId: chatId
 }
 
-// SI HUBO UN FALLO Y EL MENSAJE NO SE PUDO ENVIAR: (EXISTE UNA PROBABILIDAD DE QUE SUCEDA)
+// SI HUBO UN FALLO Y EL MENSAJE NO SE PUDO ENVIAR: (30% DE PROBABILIDAD DE QUE SUCEDA)
 
 on 'chats'
 {
