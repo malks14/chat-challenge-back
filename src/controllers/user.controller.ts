@@ -87,7 +87,7 @@ export const createUser = (req, res, next): void => {
 export const logInUser = (req, res, next): void => {
 	const { email, password } = req.body;
 
-	if (!validAttributes('', '', email, password, '')) {
+	if (!validAttributes('x', 'x', email, password, 'x')) {
 		return res.status(400).json({
 			message: 'Bad Request: Make sure all attributes and their types are OK',
 			attributes: { email, password },

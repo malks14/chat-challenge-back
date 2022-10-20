@@ -13,7 +13,22 @@ import { StatusError } from './types/StatusError';
 
 const app = express();
 
-app.use(cors());
+const options: cors.CorsOptions = {
+	allowedHeaders: [
+		'Origin',
+		'X-Requested-With',
+		'Content-Type',
+		'Accept',
+		'X-Access-Token',
+		'Authorization',
+	],
+	credentials: true,
+	origin: `http://localhost:3000`,
+	methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+	preflightContinue: false,
+};
+
+app.use(cors(options));
 
 const fileStorage = diskStorage({
 	destination: (req, file, callback) => {
