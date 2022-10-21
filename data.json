@@ -5,12 +5,12 @@
 		"lastName": "Bros",
 		"email": "mario@nintendo.com.ar",
 		"password": "mariobros",
-		"image": "dist/images/42t3f1lfl33gm8yu-mario.png",
+		"image": "images/42t3f1lfl33gm8yu-mario.png",
 		"chats": [
 			{
 				"chatId": "42t3f1n6l33gos12",
 				"name": "Bowser",
-				"image": "dist/images/42t3f1n6l33gos0r-bowser.png",
+				"image": "images/42t3f1n6l33gos0r-bowser.png",
 				"messages": [
 					{
 						"messageId": "42t3f1o2l33gq0ki",
@@ -41,7 +41,7 @@
 			{
 				"chatId": "42t3f1lyl33godcw",
 				"name": "Peach",
-				"image": "dist/images/42t3f1lyl33godcr-peach.png",
+				"image": "images/42t3f1lyl33godcr-peach.png",
 				"messages": [
 					{
 						"messageId": "42t3f1psl33grkjf",
